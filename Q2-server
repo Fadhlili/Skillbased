@@ -33,7 +33,7 @@ int main() {
  close(sockfd);
  return 1;
  }
-4
+
  printf("Server is listening for incoming connections...\n");
  // Accept a client connection
  newsockfd = accept(sockfd, (struct sockaddr*)&client_addr, &client_addr_len);
