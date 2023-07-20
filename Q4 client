@@ -1,0 +1,20 @@
+import socket
+
+def main():
+    server_host = '192.168.242.147'  # Change this to the server's IP if running on different machines
+    server_port = 8888
+
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((server_host, server_port))
+
+    try:
+        quote = client_socket.recv(1024).decode()
+        print("Malaysian Quote of the Day:", quote)
+
+    except Exception as e:
+        print("Error:", e)
+
+    client_socket.close()
+
+if __name__ == "__main__":
+    main()
