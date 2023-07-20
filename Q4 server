@@ -1,0 +1,41 @@
+import socket
+
+def bar_to_atmosphere(pressure_bar):
+    return pressure_bar * 0.986923
+
+def main():
+    server_host = '192.168.242.147'  # Change this to the server's IP if running on different machines
+    server_port = 8080
+
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((server_host, server_port))
+    server_socket.listen(1)
+
+    print("Server is listening for incoming connections...")
+    conn, addr = server_socket.accept()
+    print("Connected by:", addr)
+
+    while True:
+        try:
+            data = conn.recv(1024)
+            if not data:
+                break
+
+            pressure_bar = float(data.decode().strip())
+            atmosphere_standard = bar_to_atmosphere(pressure_bar)
+            conn.sendall(str(atmosphere_standard).encode())
+
+        except ValueError:
+            conn.sendall(b"Invalid input. Please enter a valid pressure value in bar.")
+        except Exception as e:
+            print("Error:", e)
+            break
+
+    conn.close()
+    server_socket.close()
+
+if __name__ == "__main__":
+    main()
+
+ 
+
