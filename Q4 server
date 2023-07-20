@@ -1,0 +1,48 @@
+import socket
+import threading
+import random
+
+# List of Malaysian quotes
+malaysian_quotes = [
+    "Berakit-rakit ke hulu, berenang-renang ke tepian; bersakit-sakit dahulu, bersenang-senang kemudian.",
+    "Harimau mati meninggalkan belang, gajah mati meninggalkan gading.",
+    "Melentur buluh biarlah dari rebungnya.",
+    "Bersatu teguh, bercerai roboh.",
+    "Di mana bumi dipijak, di situ langit dijunjung.",
+    "Air dicincang tak akan putus, rumpun dicabut tak akan pudar.",
+    "Sepandai-pandai tupai melompat, akhirnya jatuh ke tanah juga.",
+]
+
+def get_random_malaysian_quote():
+    return random.choice(malaysian_quotes)
+
+def handle_client(client_socket):
+    quote = get_random_malaysian_quote()
+    client_socket.send(quote.encode())
+    client_socket.close()
+
+def main():
+    server_host = '192.168.242.147'  # Change this to the server's IP if running on different machines
+    server_port = 8888
+
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((server_host, server_port))
+    server_socket.listen(5)
+
+    print("Malaysian QOTD Server is listening for incoming connections...")
+
+    while True:
+        try:
+            client_socket, client_addr = server_socket.accept()
+            print("Connected by:", client_addr)
+
+            client_handler = threading.Thread(target=handle_client, args=(client_socket,))
+            client_handler.start()
+
+        except Exception as e:
+            print("Error:", e)
+
+    server_socket.close()
+
+if __name__ == "__main__":
+    main()
